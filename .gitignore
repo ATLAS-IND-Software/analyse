@@ -1,0 +1,9 @@
+.share-signing-key*
+.share-public-keyring.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/

@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="Flüchtige KDE-Dichteanalyse und deskriptive Statistik für TSV- und CSV-Dateien.">
+  <link rel="manifest" href="/static/manifest.webmanifest">
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css?v={{ version }}">
+  <title>Histo Maker</title>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Histo Maker Startseite">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span><strong>Histo Maker</strong><small>Dichte &amp; Statistik</small></span>
+      </a>
+      <div class="header-actions">
+        <span class="privacy-pill"><span aria-hidden="true"></span> Keine dauerhafte Datenspeicherung</span>
+        <button id="install-button" class="button ghost" type="button" hidden>App installieren</button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section id="upload-view" class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">STATISTISCHE VERTEILUNGSANALYSE</p>
+          <h1 id="hero-title">Aus Rohdaten werden<br><em>klare Verteilungen.</em></h1>
+          <p class="hero-text">TSV oder CSV laden, Daten flexibel segmentieren und aussagekräftige Dichtekurven mit allen wichtigen Kennzahlen erhalten.</p>
+          <div class="trust-row" aria-label="Datenschutz und Nutzung">
+            <span>✓ Flüchtige Serververarbeitung</span>
+            <span>✓ Kein Konto</span>
+            <span>✓ Kein Datenbank-Upload</span>
+          </div>
+        </div>
+        <label id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-describedby="upload-hint">
+          <input id="file-input" type="file" accept=".tsv,.csv,.txt,text/plain,text/tab-separated-values,text/csv" hidden>
+          <span class="upload-icon" aria-hidden="true">↥</span>
+          <strong>Datei hier ablegen</strong>
+          <span>oder zum Auswählen klicken</span>
+          <small id="upload-hint">TSV / CSV / TXT · bis 50 MB</small>
+        </label>
+      </section>
+
+      <section id="workspace" class="workspace" aria-label="Analyse-Arbeitsbereich" hidden>
+        <div id="shared-banner" class="shared-banner" role="status" hidden>
+          <div><strong>Signiertes Ergebnis</strong><span id="shared-verification">Signatur wird geprüft …</span></div>
+          <button id="new-analysis" class="button ghost" type="button">Eigene Analyse starten</button>
+        </div>
+
+        <div class="file-strip" role="status" aria-live="polite">
+          <div class="file-info">
+            <span class="file-icon" aria-hidden="true">TSV</span>
+            <div class="file-details"><strong id="file-name"></strong><small id="file-meta"></small></div>
+          </div>
+          <button id="change-file" class="button ghost" type="button">Andere Datei</button>
+        </div>
+
+        <section id="data-check" class="card data-check" aria-labelledby="data-check-title" hidden>
+          <div class="data-check-heading">
+            <div class="section-heading">
+              <span aria-hidden="true">00</span>
+              <div>
+                <h2 id="data-check-title">Datencheck</h2>
+                <p>Erkennung prüfen, Datenqualität verstehen und Spalten benennen</p>
+              </div>
+            </div>
+            <span class="privacy-note">Die Vorschau bleibt flüchtig</span>
+          </div>
+
+          <div id="data-quality-summary" class="quality-summary" role="status" aria-live="polite" aria-atomic="true">
+            <span class="quality-icon" aria-hidden="true">✓</span>
+            <div><strong>Datei wird geprüft</strong><p>Nach dem Einlesen erscheinen hier Hinweise zu gültigen, fehlenden und auffälligen Werten.</p></div>
+          </div>
+
+          <div class="parse-panel" aria-labelledby="parse-title">
+            <div class="panel-heading">
+              <div><h3 id="parse-title">Importregeln</h3><p>Nur ändern, wenn Zahlen oder Spalten nicht korrekt erkannt wurden.</p></div>
+              <button id="reinspect-button" class="button secondary" type="button">Mit Regeln neu prüfen</button>
+            </div>
+            <div class="parse-grid">
+              <label class="field">
+                <span>Trennzeichen</span>
+                <select id="parse-delimiter">
+                  <option value="auto">Automatisch</option>
+                  <option value="tab">Tabulator</option>
+                  <option value="comma">Komma</option>
+                  <option value="semicolon">Semikolon</option>
+                  <option value="pipe">Senkrechter Strich</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Zeichenkodierung</span>
+                <select id="parse-encoding">
+                  <option value="auto">Automatisch</option>
+                  <option value="utf-8">UTF-8</option>
+                  <option value="utf-8-sig">UTF-8 mit BOM</option>
+                  <option value="utf-16">UTF-16</option>
+                  <option value="utf-32">UTF-32</option>
+                  <option value="cp1252">Windows-1252</option>
+                  <option value="latin-1">ISO-8859-1</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Dezimalzeichen</span>
+                <select id="parse-decimal">
+                  <option value="auto">Automatisch</option>
+                  <option value=",">Komma (1,5)</option>
+                  <option value=".">Punkt (1.5)</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Tausendertrennzeichen</span>
+                <select id="parse-thousands">
+                  <option value="auto">Automatisch</option>
+                  <option value="none">Keines</option>
+                  <option value=".">Punkt (1.000)</option>
+                  <option value=",">Komma (1,000)</option>
+                  <option value="space">Leerzeichen (1 000)</option>
+                  <option value="apostrophe">Apostroph (1'000)</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="data-check-layout">
+            <section class="preview-panel" aria-labelledby="preview-title">
+              <div class="panel-heading compact-heading">
+                <div><h3 id="preview-title">Datenvorschau</h3><p>Die ersten Zeilen nach Anwendung der Importregeln.</p></div>
+              </div>
+              <div class="table-scroll preview-scroll" tabindex="0" role="region" aria-label="Horizontal scrollbare Datenvorschau">
+                <table id="preview-table" aria-label="Vorschau der importierten Datensätze">
+                  <caption class="sr-only">Vorschau der importierten Datensätze</caption>
+                  <thead></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </section>
+
+            <div class="data-side-panels">
+              <section class="profile-panel" aria-labelledby="profile-title">
+                <div class="panel-heading compact-heading">
+                  <div><h3 id="profile-title">Spaltenprofil</h3><p>Typ, Vollständigkeit und unterschiedliche Werte.</p></div>
+                </div>
+                <div id="column-profile" class="column-profile" aria-live="polite">
+                  <p class="empty-note">Spaltenprofil wird vorbereitet …</p>
+                </div>
+              </section>
+
+              <section class="config-panel" aria-labelledby="config-title">
+                <div class="panel-heading compact-heading">
+                  <div><h3 id="config-title">Anzeigenamen &amp; Einheiten</h3><p>Optionale Bezeichnungen für Diagramm und Export.</p></div>
+                </div>
+                <div id="column-config" class="column-config">
+                  <p class="empty-note">Wähle eine Spalte im Profil, um Name und Einheit anzupassen.</p>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <div class="work-grid">
+          <aside class="controls card" aria-labelledby="analysis-title">
+            <div class="section-heading">
+              <span aria-hidden="true">01</span><div><h2 id="analysis-title">Analyse</h2><p>Achse, Segmente und Glättung wählen</p></div>
+            </div>
+            <label class="field">
+              <span>Wert (X-Achse)</span>
+              <select id="x-column" aria-describedby="x-column-hint"></select>
+              <small id="x-column-hint" class="field-hint">ID-artige Spalten werden bei der Vorauswahl nachrangig behandelt.</small>
+            </label>
+            <div class="field-row">
+              <label class="field"><span>Segment 1</span><select id="hue-1"></select></label>
+              <label class="field"><span>Segment 2</span><select id="hue-2"></select></label>
+            </div>
+            <div id="segment-estimate" class="segment-estimate" role="group" aria-label="Geschätzter Segmentumfang und Begrenzung" aria-live="polite"></div>
+            <label class="field range-field">
+              <span><span>KDE-Bandbreite</span><output id="bandwidth-value" for="bandwidth">1,00×</output></span>
+              <input id="bandwidth" type="range" min="0.25" max="2.5" step="0.05" value="1" aria-describedby="bandwidth-hint">
+              <small id="bandwidth-hint" class="field-hint">Kleiner zeigt mehr Details, größer glättet stärker.</small>
+            </label>
+            <label class="field">
+              <span>Lokale Öffnungsfrist</span>
+              <select id="share-expiry-days" aria-describedby="share-expiry-hint">
+                <option value="1">Nach 1 Tag</option>
+                <option value="7" selected>Nach 7 Tagen</option>
+                <option value="30">Nach 30 Tagen</option>
+                <option value="90">Nach 90 Tagen</option>
+              </select>
+              <small id="share-expiry-hint" class="field-hint">Der Browser verweigert danach die Anzeige. Der Linkinhalt wird dadurch weder gelöscht noch widerrufen.</small>
+            </label>
+
+            <div class="divider"></div>
+            <div class="section-heading compact">
+              <span aria-hidden="true">02</span><div><h2 id="filter-title">Filter</h2><p>UND/ODER-Gruppen verschachteln</p></div>
+            </div>
+            <div id="filter-builder" class="filter-builder" role="group" aria-labelledby="filter-title"></div>
+            <button id="analyze-button" class="button primary full" type="button"><span>Analyse erstellen</span><b aria-hidden="true">→</b></button>
+          </aside>
+
+          <div class="results">
+            <section class="card chart-card" aria-labelledby="chart-title">
+              <div class="card-title chart-heading">
+                <div class="card-title-copy"><p class="eyebrow">DICHTEVERTEILUNG</p><h2 id="chart-title">Bereit für die Analyse</h2></div>
+                <span id="result-count" class="result-count" aria-live="polite"></span>
+              </div>
+
+              <div id="chart-toolbar" class="chart-toolbar" role="toolbar" aria-label="Diagrammoptionen" hidden>
+                <div class="toolbar-group" aria-label="Zusätzliche Darstellung">
+                  <button id="toggle-histogram" class="tool-button toggle" type="button" aria-controls="chart" aria-pressed="false"><span class="tool-icon bars" aria-hidden="true"></span>Histogramm</button>
+                  <button id="toggle-rug" class="tool-button toggle" type="button" aria-controls="chart" aria-pressed="false"><span class="tool-icon rug" aria-hidden="true"></span>Rohwerte</button>
+                  <button id="toggle-reference" class="tool-button toggle" type="button" aria-controls="chart" aria-pressed="false"><span class="tool-icon reference" aria-hidden="true"></span>Mittel &amp; Median</button>
+                </div>
+                <div class="toolbar-group toolbar-actions" aria-label="Ansicht und Export">
+                  <button id="reset-zoom" class="tool-button" type="button" aria-controls="chart" title="Zoom zurücksetzen">Zoom zurücksetzen</button>
+                  <button id="export-svg" class="tool-button" type="button">SVG</button>
+                  <button id="export-png" class="tool-button" type="button">PNG</button>
+                </div>
+              </div>
+
+              <div id="empty-chart" class="empty-chart">
+                <span class="empty-graphic" aria-hidden="true">⌁</span>
+                <strong>Noch kein Diagramm</strong>
+                <p>Konfiguration wählen und Analyse starten.</p>
+              </div>
+              <div id="chart-wrap" class="chart-wrap" role="region" aria-label="Interaktives Dichtediagramm" hidden>
+                <svg id="chart" role="img" aria-label="Dichteverteilung"></svg>
+                <div id="chart-tooltip" class="chart-tooltip" role="status" aria-live="polite" hidden></div>
+                <div id="legend" class="legend" aria-label="Datenreihen"></div>
+              </div>
+              <div id="chart-summary" class="chart-summary" aria-live="polite">Nach der Analyse steht hier eine textliche Zusammenfassung des Diagramms.</div>
+            </section>
+
+            <section id="stats-card" class="card stats-card" aria-labelledby="stats-title" hidden>
+              <div class="card-title table-title">
+                <div class="card-title-copy"><p class="eyebrow">DESKRIPTIVE STATISTIK</p><h2 id="stats-title">Kennzahlen im Vergleich</h2></div>
+                <div class="table-actions" aria-label="Statistik exportieren und teilen">
+                  <button id="share-result" class="button ghost small" type="button">Link teilen</button>
+                  <button id="copy-table" class="button ghost small" type="button">Kopieren</button>
+                  <button id="download-table" class="button ghost small" type="button">TSV laden</button>
+                </div>
+              </div>
+              <div id="export-filter-summary" class="export-filter-summary"></div>
+              <div class="table-scroll stats-table-scroll" tabindex="0" role="region" aria-label="Horizontal scrollbare Statistik-Tabelle">
+                <table id="stats-table" aria-label="Deskriptive Kennzahlen je Segment">
+                  <caption class="sr-only">Deskriptive Kennzahlen je Segment. Die Spalten können sortiert werden.</caption>
+                  <thead></thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer><span>Histo Maker <b>v{{ version }}</b></span><span>Flüchtig · PWA · Open Web</span></footer>
+  </div>
+
+  <dialog id="share-dialog" class="share-dialog" aria-labelledby="share-dialog-title" aria-describedby="share-dialog-description">
+    <form method="dialog" class="share-panel">
+      <div class="share-heading">
+        <div><p class="eyebrow">SIGNIERTE FREIGABE</p><h2 id="share-dialog-title">Ergebnis per Link teilen</h2></div>
+        <button class="dialog-close" value="cancel" aria-label="Dialog schließen">×</button>
+      </div>
+      <p id="share-dialog-description">Der Link enthält nur Diagramm und Kennzahlen, niemals Rohdaten oder Dateiname. Der Server signiert das Ergebnis; nachträgliche Änderungen machen die Signatur ungültig.</p>
+      <p id="share-expiry-note" class="share-expiry-note" role="note">Die signierte Öffnungsfrist wird nur lokal anhand der Geräteuhr geprüft. Sie löscht oder widerruft den Link nicht; für Vertraulichkeit ist das optionale Passwort entscheidend.</p>
+      <div id="share-small-group-warning" class="share-warning" role="alert" hidden></div>
+      <label class="share-option"><input id="share-filter" type="checkbox"><span>Verwendeten Filterausdruck mitsenden <small>Filterwerte können vertrauliche Angaben enthalten.</small></span></label>
+      <label class="field share-password-field">
+        <span>Optionales Passwort</span>
+        <input id="share-password" type="password" autocomplete="new-password" minlength="8" placeholder="Mindestens 8 Zeichen" aria-describedby="share-password-hint">
+        <small id="share-password-hint" class="field-hint">Verschlüsselt den Linkinhalt. Das Passwort getrennt und sicher übermitteln.</small>
+      </label>
+      <label class="share-option confirm"><input id="share-confirm" type="checkbox"><span>Mir ist bewusst, dass jede Person mit diesem Link und gegebenenfalls dem Passwort die enthaltenen Ergebnisse sehen kann und die Öffnungsfrist den Link nicht widerruft.</span></label>
+      <button id="create-share-link" type="button" class="button primary full"><span>Signierten Link erstellen und kopieren</span><b aria-hidden="true">→</b></button>
+      <label id="share-link-wrap" class="share-link-wrap" hidden><span>Freigabelink</span><textarea id="share-link" rows="3" readonly></textarea></label>
+      <p class="share-footnote">Der Link wird nicht auf dem Server gespeichert. Sein Inhalt bleibt auch nach der Öffnungsfrist im Fragment und kann in Zwischenablage, Browserhistorie, Browser-Synchronisation oder Chatverläufen verbleiben.</p>
+    </form>
+  </dialog>
+
+  <dialog id="unlock-dialog" class="unlock-dialog" aria-labelledby="unlock-dialog-title" aria-describedby="unlock-dialog-description">
+    <form method="dialog" class="unlock-panel">
+      <div class="share-heading">
+        <div><p class="eyebrow">GESCHÜTZTE FREIGABE</p><h2 id="unlock-dialog-title">Ergebnis entsperren</h2></div>
+        <button class="dialog-close" value="cancel" aria-label="Dialog schließen">×</button>
+      </div>
+      <p id="unlock-dialog-description">Dieser Freigabelink ist verschlüsselt. Gib das separat erhaltene Passwort ein, um Signatur und Ergebnis zu prüfen.</p>
+      <label class="field">
+        <span>Passwort</span>
+        <input id="unlock-password" type="password" autocomplete="current-password" aria-describedby="unlock-password-hint">
+        <small id="unlock-password-hint" class="field-hint">Das Passwort wird nur lokal zum Entschlüsseln verwendet.</small>
+      </label>
+      <div id="unlock-error" class="unlock-error" role="alert" aria-live="assertive" hidden></div>
+      <button id="unlock-share" type="button" class="button primary full"><span>Ergebnis entsperren</span><b aria-hidden="true">→</b></button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="loading" class="loading" role="dialog" aria-modal="true" aria-labelledby="loading-title" aria-describedby="loading-stage" tabindex="-1" hidden>
+    <div class="loading-panel">
+      <div class="spinner" aria-hidden="true"></div>
+      <strong id="loading-title">Daten werden analysiert …</strong>
+      <p id="loading-stage" role="status" aria-live="polite">Datei wird vorbereitet.</p>
+      <progress id="loading-progress" class="loading-progress" max="100" aria-label="Fortschritt der Analyse"></progress>
+      <button id="cancel-analysis" class="button ghost" type="button">Analyse abbrechen</button>
+    </div>
+  </div>
+  <script src="/static/app.js?v={{ version }}" defer></script>
+</body>
+</html>

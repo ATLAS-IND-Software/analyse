@@ -1,0 +1,87 @@
+/*
+ * Gemeinsames Web-CD – Design Tokens
+ * Abgeleitet aus Histo Maker v2.4.1.
+ * Diese Datei ist der portable Startpunkt für nachfolgende Webprojekte.
+ */
+
+:root {
+  /* Schrift */
+  --font-ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  /* Marken- und Flächenfarben */
+  --color-ink: #101828;
+  --color-navy: #0b1220;
+  --color-muted: #667085;
+  --color-muted-strong: #475467;
+  --color-line: #e4e9ef;
+  --color-paper: #ffffff;
+  --color-ground: #f3f5f7;
+  --color-mint: #58d6aa;
+  --color-mint-dark: #18795b;
+  --color-mint-soft: #dff7ee;
+  --color-amber: #f0b45b;
+  --color-amber-soft: #fff8eb;
+
+  /* Semantische Farben */
+  --color-success: var(--color-mint-dark);
+  --color-success-bg: #effbf6;
+  --color-success-line: #b7e4d4;
+  --color-warning: #75521e;
+  --color-warning-bg: #fffaf0;
+  --color-warning-line: #ead9b7;
+  --color-danger: #9b2c2c;
+  --color-danger-bg: #fff3f3;
+  --color-danger-line: #efc7c7;
+  --color-focus-ring: rgba(88, 214, 170, 0.15);
+
+  /* Diagrammserien: Reihenfolge projektübergreifend beibehalten */
+  --chart-1: #16805e;
+  /* Gegenüber dem Bestand für ausreichenden Kontrast auf Weiß abgedunkelt. */
+  --chart-2: #b27316;
+  --chart-3: #4f6fc7;
+  --chart-4: #c75575;
+  --chart-5: #7c5ac7;
+  --chart-6: #208fa3;
+  --chart-7: #8a6a42;
+  --chart-8: #6a7d2f;
+
+  /* Abstände: bevorzugte 4-/8-Pixel-Skala */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 72px;
+
+  /* Form */
+  --radius-control: 9px;
+  --radius-status: 10px;
+  --radius-card: 18px;
+  --radius-feature: 24px;
+  --radius-pill: 999px;
+
+  /* Tiefe und Bewegung */
+  --shadow-card: 0 8px 28px rgba(11, 18, 32, 0.045);
+  --shadow-float: 0 18px 45px rgba(11, 18, 32, 0.08);
+  --shadow-dialog: 0 24px 80px rgba(11, 18, 32, 0.28);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --ease-standard: ease;
+
+  /* Layout */
+  --content-max: 1540px;
+  --sidebar-width: 430px;
+  --topbar-height: 92px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+  }
+}

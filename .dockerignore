@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.git/
+.share-signing-key*
+.share-public-keyring.json
+.venv/
+venv/
+build/
+dist/
+*.exe
+*.spec
+*.tsv
+*.csv
+zuf analyse/

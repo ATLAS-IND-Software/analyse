@@ -1,0 +1,13 @@
+{
+  "name": "Histo Maker – Dichte & Statistik",
+  "short_name": "Histo Maker",
+  "description": "Interaktive Verteilungsanalyse, Datenqualität und deskriptive Statistik für TSV- und CSV-Dateien.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f6f8",
+  "theme_color": "#0b1220",
+  "icons": [
+    {"src": "/static/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
